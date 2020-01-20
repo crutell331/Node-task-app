@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-
+const Task = require('./Task')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -96,6 +96,13 @@ userSchema.pre('save', async function (next) {
     if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
     }
+    next()
+})
+
+// add middleware to cascade delete associated tasks
+userSchema.pre('remove', async function (next) {
+    const user = this
+    await Task.deleteMany({ user: user._id })
     next()
 })
 const User = mongoose.model('User', userSchema)
