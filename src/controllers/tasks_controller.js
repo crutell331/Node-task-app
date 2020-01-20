@@ -13,7 +13,6 @@ router.post('/tasks', auth, async (req, res) => {
         res.status(400)
             .send(error)
     }
-
 })
 
 router.get('/tasks', async (req, res) => {
@@ -28,17 +27,18 @@ router.get('/tasks', async (req, res) => {
     }
 })
 
-// router.get('/tasks/:id', async (req, res) => {
-//     try {
-//         const task = await Task.findById(req.params.id)
-//         if (!task) {
-//             return res.status(404).res.send()
-//         }
-//         res.send(task)
-//     } catch (e) {
-//         res.status(500).send()
-//     }
-// })
+router.get('/tasks/:id', auth, async (req, res) => {
+    try {
+        // const task = await Task.findById(req.params.id)
+        const task = await Task.findOne({ _id: req.params.id, user: req.user._id })
+        if (!task) {
+            return res.status(404).res.send()
+        }
+        res.send(task)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
 
 // router.patch('/tasks/:id', async (req, res) => {
 //     const allowedUpdates = ['name', 'age', 'email', 'password']
