@@ -14,6 +14,7 @@ router.post('/users/login', async (req, res) => {
     }
 })
 router.post('/users', async (req, res) => {
+    console.log('here')
     try {
         const user = new User(req.body)
         await user.save()

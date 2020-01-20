@@ -83,17 +83,12 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
 
 
-//userSchema.pre or userSchema.post
-//pass name of event that you want to do something before and the function you want it to run
 userSchema.pre('save', async function (next) {
     const user = this
-    console.log("before save")
 
     if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
     }
-
-    //call next to indicate function is complete. Cant assume completion in the case of async functions for example
     next()
 })
 const User = mongoose.model('User', userSchema)
